@@ -10,68 +10,57 @@
 
 #include <sstream>
 
-
 template <typename T>
 
 std::string to_string(T value)
 
 {
 
-std::ostringstream os ;
+    std::ostringstream os;
 
-os << value ;
+    os << value;
 
-return os.str() ;
-
+    return os.str();
 }
-
-
 
 class Aso
 
 {
 
 public:
+    Aso();
 
-Aso();
+    Aso(Draw *draw);
 
-Aso(Draw * draw);
+    void set_city_beginning(int c);
 
-void set_city_beginning(int c);
+    void draw_best();
 
-void draw_best();
+    std::string best_way();
 
-std::string best_way();
+    float best_distance();
 
-float best_distance();
+    virtual ~Aso();
 
-virtual ~Aso();
+    void add_city(float x, float y);
 
+    void test();
 
-void add_city(float x,float y);
+    void run(Draw *draw);
 
-void test();
-
-void run(Draw * draw);
-
-void Draw_cities();
+    void Draw_cities();
 
 protected:
-
-
 private:
+    Draw *draw = nullptr;
 
-Draw * draw = nullptr;
+    Ant *ant = nullptr;
 
-Ant * ant = nullptr;
+    Map city_map;
 
-Map city_map;
+    float map_scale = 100;
 
-float map_scale = 100;
-
-int ant_colony_size = 3;
-
+    int ant_colony_size = 3;
 };
-
 
 #endif // ASO_H

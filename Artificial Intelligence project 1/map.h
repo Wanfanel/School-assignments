@@ -2,7 +2,6 @@
 
 #define MAP_H
 
-
 #include "city.h"
 
 #include "tab2d.h"
@@ -11,119 +10,101 @@
 
 #include "Draw.h"
 
-
-
 class Map
 
 {
 
 public:
+    Map();
 
+    // Map(Draw * draw);
 
-Map();
+    virtual ~Map();
 
-// Map(Draw * draw);
+    City GetCity(int c)
 
-virtual ~Map();
+    {
 
-City GetCity(int c)
+        return city[c];
+    }
 
-{
+    double get_cityDistance(int &fCity, int sCity) { return city_distance[fCity][sCity]; }
 
-return city[c];
+    double get_path_visibility(int &fCity, int sCity) { return path_visibility[fCity][sCity]; }
 
-}
+    int get_first_city() { return city_start; }
 
-double get_cityDistance(int &fCity, int sCity){ return city_distance[fCity][sCity];}
+    int get_cityAmount() { return city_count; }
 
-double get_path_visibility(int &fCity,int sCity){return path_visibility[fCity][sCity];}
+    double get_pheromone(int &fCity, int sCity) { return pheromone.get(fCity, sCity); }
 
-int get_first_city(){return city_start;}
+    double get_delta_pheromone(int &fCity, int sCity) { return delta_pheromone.get(fCity, sCity); }
 
-int get_cityAmount(){return city_count;}
+    double get_alfa() { return alfa; }
 
-double get_pheromone(int &fCity,int sCity){return pheromone.get(fCity,sCity);}
+    double get_chance();
 
-double get_delta_pheromone(int &fCity,int sCity){return delta_pheromone.get(fCity,sCity);}
+    double get_Q() { return Q; }
 
-double get_alfa(){return alfa;}
+    double get_best_lenght() { return best; }
 
-double get_chance();
+    int get_best_city(int c) { return best_path[c]; }
 
-double get_Q(){return Q;}
+    City get_city(int icity) { return city[icity]; }
 
-double get_best_lenght(){return best;}
+    void reset_best() { best = -1.0; }
 
-int get_best_city(int c){return best_path[c];}
+    void set_start_city(int c) { city_start = c; }
 
-City get_city(int icity){return city[icity];}
+    void set_pheromone(int &fCity, int sCity, double var) { pheromone.set_mirror(fCity, sCity, var); }
 
-void reset_best(){best = -1.0;}
+    void set_delta_pheromone(int &fCity, int sCity, double var) { delta_pheromone.set_mirror(fCity, sCity, var); }
 
+    void add_delta_pheromone(int fCity, int &sCity, double &var) { delta_pheromone.add_mirror(fCity, sCity, var); }
 
-void set_start_city(int c){city_start = c;}
+    bool if_best_path(double &lenght);
 
-void set_pheromone(int &fCity,int sCity,double var){pheromone.set_mirror( fCity, sCity, var);}
+    void save_best(int *path);
 
-void set_delta_pheromone(int &fCity,int sCity, double var){delta_pheromone.set_mirror( fCity, sCity, var);}
+    void add_city(float x, float y);
 
-void add_delta_pheromone(int fCity,int &sCity, double &var){delta_pheromone.add_mirror( fCity, sCity, var);}
+    void update_pheromone_from_delta();
 
-bool if_best_path(double &lenght);
-
-void save_best( int * path);
-
-
-void add_city(float x, float y);
-
-void update_pheromone_from_delta();
-
-
-Draw * draw = nullptr;
+    Draw *draw = nullptr;
 
 protected:
-
 private:
+    int city_count = 0;
 
+    int city_max = 4;
 
-int city_count = 0;
+    City *city;
 
-int city_max = 4;
+    double **city_distance;
 
-City * city;
+    double **path_visibility;
 
-double ** city_distance;
+    double Q = 80;
 
-double ** path_visibility;
+    double beta = 2.8;
 
-double Q = 80;
+    double alfa = 1.5;
 
-double beta = 2.8;
+    double evaporation = 0.2;
 
-double alfa = 1.5;
+    Tab2D delta_pheromone;
 
-double evaporation = 0.2;
+    Tab2D pheromone;
 
+    double best = -1;
 
-Tab2D delta_pheromone;
+    int *best_path = nullptr;
 
-Tab2D pheromone;
+    int ants;
 
-double best = -1;
+    int city_start = 0;
 
-int * best_path = nullptr;
-
-int ants;
-
-int city_start = 0;
-
-
-Aleatory chance;
-
-
+    Aleatory chance;
 };
 
-
 #endif // MAP_H
-
-

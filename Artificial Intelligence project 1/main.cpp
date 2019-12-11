@@ -1,12 +1,6 @@
 #include "aso.h"
 
-
 #include <string>
-
-
-
-
-
 
 //Screen dimension constants
 
@@ -14,249 +8,224 @@ const int SCREEN_WIDTH = 840;
 
 const int SCREEN_HEIGHT = 680;
 
-
-int main( int argc, char* args[] )
-
-{
-
-bool pause = 1;
-
-const int FPS = 30;
-
-const int frameDelay = 1000/FPS;
-
-Uint32 frameStart;
-
-int frameTime;
-
-
-Draw * draw = new Draw(SCREEN_WIDTH,SCREEN_HEIGHT);
-
-Aso aso(draw);
-
-std::string aso_console = "add 1 1 add 3 3 add 7 6 add 2 8 add 10 1 beginning 2 start";
-
-std::string message_i;
-
-int i = 0;
+int main(int argc, char *args[])
 
 {
 
-SDL_bool done = SDL_FALSE;
+    bool pause = 1;
 
-SDL_StartTextInput();
+    const int FPS = 30;
 
-while (!done)
+    const int frameDelay = 1000 / FPS;
 
-{
+    Uint32 frameStart;
 
-frameStart = SDL_GetTicks();
+    int frameTime;
 
+    Draw *draw = new Draw(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-SDL_Event event;
+    Aso aso(draw);
 
+    std::string aso_console = "add 1 1 add 3 3 add 7 6 add 2 8 add 10 1 beginning 2 start";
 
-draw->SetRenderDrawColor(0,0,0,SDL_ALPHA_OPAQUE);
+    std::string message_i;
 
-draw->RenderClear();
+    int i = 0;
 
-aso.Draw_cities();
+    {
 
-draw->SetRenderDrawColor( 255, 255, 255,SDL_ALPHA_OPAQUE );
+        SDL_bool done = SDL_FALSE;
 
-if(!pause)
+        SDL_StartTextInput();
 
-{
+        while (!done)
 
-aso.run(draw);
+        {
 
-i++;
+            frameStart = SDL_GetTicks();
 
+            SDL_Event event;
 
-draw->SetRenderDrawColor( 255, 0, 0,SDL_ALPHA_OPAQUE );
+            draw->SetRenderDrawColor(0, 0, 0, SDL_ALPHA_OPAQUE);
 
-aso.draw_best();
+            draw->RenderClear();
 
-}
+            aso.Draw_cities();
 
-else if (aso.best_distance()>0)
+            draw->SetRenderDrawColor(255, 255, 255, SDL_ALPHA_OPAQUE);
 
-{
+            if (!pause)
 
-draw->SetRenderDrawColor( 255, 0, 0,SDL_ALPHA_OPAQUE );
+            {
 
-aso.draw_best();
+                aso.run(draw);
 
-}
+                i++;
 
-draw->draw_message(aso_console, 5,SCREEN_HEIGHT-30);
+                draw->SetRenderDrawColor(255, 0, 0, SDL_ALPHA_OPAQUE);
 
-draw->draw_message(to_string(i)+"\tbest way:\t"+ aso.best_way()+"\tleaght:\t"+ to_string(aso.best_distance()),5,5);
+                aso.draw_best();
+            }
 
-draw->RenderPresent();
+            else if (aso.best_distance() > 0)
 
-SDL_StartTextInput();
+            {
 
+                draw->SetRenderDrawColor(255, 0, 0, SDL_ALPHA_OPAQUE);
 
-while (SDL_PollEvent(&event))
+                aso.draw_best();
+            }
 
-{
+            draw->draw_message(aso_console, 5, SCREEN_HEIGHT - 30);
 
-if( event.key.keysym.sym == SDLK_ESCAPE ){done = SDL_TRUE;}
+            draw->draw_message(to_string(i) + "\tbest way:\t" + aso.best_way() + "\tleaght:\t" + to_string(aso.best_distance()), 5, 5);
 
-else if(event.key.keysym.sym == SDLK_RETURN)
+            draw->RenderPresent();
 
-{
+            SDL_StartTextInput();
 
-std::istringstream iss(aso_console);
+            while (SDL_PollEvent(&event))
 
-std::string arg;
+            {
 
+                if (event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    done = SDL_TRUE;
+                }
 
-while(iss >> arg )
+                else if (event.key.keysym.sym == SDLK_RETURN)
 
-if (arg == "add")
+                {
 
-{
+                    std::istringstream iss(aso_console);
 
-float city_x;
+                    std::string arg;
 
-float city_y;
+                    while (iss >> arg)
 
-iss>>city_x;
+                        if (arg == "add")
 
-iss>>city_y;
+                        {
 
-aso.add_city(city_x,city_y);
+                            float city_x;
 
-i = 0;
+                            float city_y;
 
+                            iss >> city_x;
 
-}
+                            iss >> city_y;
 
-else if(arg == "start")
+                            aso.add_city(city_x, city_y);
 
-{
+                            i = 0;
+                        }
 
-pause = 0;
+                        else if (arg == "start")
 
-}
+                        {
 
-else if(arg == "stop")
+                            pause = 0;
+                        }
 
-{
+                        else if (arg == "stop")
 
-pause = 1;
+                        {
 
-}
+                            pause = 1;
+                        }
 
-else if(arg == "beginning")
+                        else if (arg == "beginning")
 
-{
+                        {
 
-int beginning;
+                            int beginning;
 
-iss>>beginning;
+                            iss >> beginning;
 
-aso.set_city_beginning(beginning);
+                            aso.set_city_beginning(beginning);
 
-i = 0;
+                            i = 0;
+                        }
 
-}
+                        else if (arg == "scale")
 
-else if(arg == "scale")
+                        {
 
-{
+                            int scale;
 
-int scale;
+                            iss >> scale;
 
-iss>>scale;
+                            draw->set_scale(scale);
 
-draw->set_scale(scale);
+                            i = 0;
+                        }
 
-i = 0;
+                    aso_console = "";
+                }
 
-}
+                else if (event.type == SDL_QUIT)
 
+                {
 
-aso_console = "";
+                    done = SDL_TRUE;
+                }
 
-}
+                else if (event.type == SDL_KEYDOWN)
 
-else if (event.type == SDL_QUIT)
+                {
 
-{
+                    if (event.key.keysym.sym == SDLK_BACKSPACE)
 
-done = SDL_TRUE;
+                    {
 
-}
+                        if (!aso_console.empty())
 
-else if( event.type == SDL_KEYDOWN )
+                            aso_console.pop_back();
+                    }
 
-{
+                    //Handle copy
 
-if( event.key.keysym.sym == SDLK_BACKSPACE)
+                    else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
 
-{
+                    {
 
-if(!aso_console.empty())
+                        SDL_SetClipboardText(aso_console.c_str());
+                    }
 
-aso_console.pop_back();
+                    //Handle paste
 
-}
+                    else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
 
-//Handle copy
+                    {
 
-else if( event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
+                        aso_console = SDL_GetClipboardText();
+                    }
+                }
 
-{
+                if (event.type == SDL_TEXTINPUT)
 
-SDL_SetClipboardText( aso_console.c_str() );
+                {
 
-}
+                    if (!((event.text.text[0] == 'c' || event.text.text[0] == 'C') && (event.text.text[0] == 'v' || event.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL))
 
-//Handle paste
+                    {
 
-else if( event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
+                        aso_console += event.text.text;
+                    }
+                }
+            }
 
-{
+            frameTime = frameStart - SDL_GetTicks();
 
-aso_console = SDL_GetClipboardText();
+            if (frameDelay > frameTime)
 
-}
+                SDL_Delay(frameDelay - frameTime);
+        }
 
-}
+        SDL_StopTextInput();
+    }
 
-if( event.type == SDL_TEXTINPUT )
+    delete draw;
 
-{
-
-if( !( ( event.text.text[ 0 ] == 'c' || event.text.text[ 0 ] == 'C' ) && ( event.text.text[ 0 ] == 'v' || event.text.text[ 0 ] == 'V' ) && SDL_GetModState() & KMOD_CTRL ) )
-
-{
-
-aso_console += event.text.text;
-
-}
-
-}
-
-}
-
-frameTime = frameStart-SDL_GetTicks();
-
-if(frameDelay>frameTime)
-
-SDL_Delay(frameDelay - frameTime);
-
-}
-
-SDL_StopTextInput();
-
-}
-
-delete draw;
-
-return 0;
-
+    return 0;
 }

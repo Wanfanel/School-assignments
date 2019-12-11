@@ -4,10 +4,10 @@ Aleatory::Aleatory()
 {
     //ctor
 }
-Aleatory::Aleatory(int boundMin, int bountMax,int seed)
-    : seed_(seed),defGen_(seed_),randInt_(boundMin, bountMax)
+Aleatory::Aleatory(int boundMin, int bountMax, int seed)
+    : seed_(seed), defGen_(seed_), randInt_(boundMin, bountMax)
 {
-/// Nothing here
+    /// Nothing here
 }
 int Aleatory::getRandInt()
 {
@@ -18,4 +18,3 @@ Aleatory::~Aleatory()
 {
     //dtor
 }
-

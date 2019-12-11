@@ -6,45 +6,32 @@
 
 #include "map.h"
 
-
-
 class Ant
 
 {
 
 public:
+    Ant();
 
-Ant();
+    Ant(Map *map);
 
-Ant(Map *map);
+    void run(Draw *draw);
 
-void run( Draw *draw);
-
-virtual ~Ant();
-
+    virtual ~Ant();
 
 protected:
-
-
 private:
+    int *path = nullptr;
 
-int * path = nullptr;
+    std::list<int> cities_to_visit;
 
-std::list<int> cities_to_visit;
+    Map *map = nullptr;
 
-Map * map = nullptr;
+    int amount_cities_to_visit;
 
-int amount_cities_to_visit;
+    double path_lenght;
 
-double path_lenght;
-
-int path_choice(int&);
-
-
-
-
-
+    int path_choice(int &);
 };
-
 
 #endif // ANT_H

@@ -1,7 +1,7 @@
 #ifndef ALEATORY_H
 #define ALEATORY_H
 
-#include <random>       //All random generators
+#include <random>       //All random generators Moreus
 #include <chrono>
 
 class Aleatory
